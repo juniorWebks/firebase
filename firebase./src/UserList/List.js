@@ -1,19 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import User from './User'
 
 const List = (props) => (
     <div>
         {
             props.users.map(user => (
-                <div
-                key= { user.key }
-                >
-                { user.name }
+                <User
+                    key={user.key}
+                    user={user}
+                />
+            ))
+
+        }
     </div>
-    ))
-            
-            }
-</div>
 )
 
 List.protoTypes = {

@@ -2,6 +2,7 @@ import React from 'react'
 import Default from './Default'
 import List from './List'
 import Loading from './Loading'
+import Forms from './Forms'
 
 
 import {mapObjectToArray} from '../utils'
@@ -35,9 +36,12 @@ class UserList extends React.Component {
                             <Loading />
                             :
                             this.state.users ?
+                            <div>
+                                <Forms />
                                 <List
                                 users={this.state.users}
                                 />
+                                </div>
                                 :
                                 <Default
                                     clickHandler={this.loadUsers}
