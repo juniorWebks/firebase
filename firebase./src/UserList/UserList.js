@@ -52,6 +52,10 @@ fetch('https://ks-sandbox-2cc5e.firebaseio.com/jfddl5-users/.json',request)
 })
     }
 
+    onEditUserHandler = (key , newName) => {
+        console.log(key,newName)
+    }
+
     render() {
         return (
             <div>
@@ -68,6 +72,7 @@ fetch('https://ks-sandbox-2cc5e.firebaseio.com/jfddl5-users/.json',request)
                             />
                             <List
                                 users={this.state.users}
+                                onEditUserHandler={this.onEditUserHandler}
                             />
                         </div>
                         :
