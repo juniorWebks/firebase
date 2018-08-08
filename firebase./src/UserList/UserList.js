@@ -35,7 +35,9 @@ class UserList extends React.Component {
                             <Loading />
                             :
                             this.state.users ?
-                                <List />
+                                <List
+                                users={this.state.users}
+                                />
                                 :
                                 <Default
                                     clickHandler={this.loadUsers}
