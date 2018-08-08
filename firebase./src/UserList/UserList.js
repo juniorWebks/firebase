@@ -40,52 +40,65 @@ class UserList extends React.Component {
     onAddNewUserClick = () => {
         const request = {
             method: "POST",
-            body: JSON.stringify({name:this.state.newUserName})
+            body: JSON.stringify({ name: this.state.newUserName })
         }
 
-fetch('https://ks-sandbox-2cc5e.firebaseio.com/jfddl5-users/.json',request)
-.then(response=> {
-    this.loadUsers()
-    this.setState({
-        newUserName:''
-    })
-})
+        fetch('https://ks-sandbox-2cc5e.firebaseio.com/jfddl5-users/.json', request)
+            .then(response => {
+                this.loadUsers()
+                this.setState({
+                    newUserName: ''
+                })
+            })
     }
 
-    onEditUserHandler = (key , newName) => {
-        console.log(key,newName)
-    }
-
-    render() {
-        return (
-            <div>
-
-                {this.state.isLoadingUsers ?
-                    <Loading />
-                    :
-                    this.state.users ?
-                        <div>
-                            <Forms
-                                newUserName={this.state.newUserName}
-                                newUserChangeHandler={this.newUserChangeHandler}
-                                onAddNewUserClick={this.onAddNewUserClick}
-                            />
-                            <List
-                                users={this.state.users}
-                                onEditUserHandler={this.onEditUserHandler}
-                            />
-                        </div>
-                        :
-                        <Default
-                            clickHandler={this.loadUsers}
-                            label={'Click'}
-                        />
-                }
-
-            </div>
+    onEditUserHandler = (key, newName) => {
+        this.setState({
+            isLoading:true
+        })
+        fetch(`https://ks-sandbox-2cc5e.firebaseio.com/jfddl5-users/${key}/.json`,
+            {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    name: newName
+                })
+            }
         )
+        .then(()=>{
+            this.loadUsers()
+        })
     }
 
-}
+        render() {
+            return (
+                <div>
 
-export default UserList
+                    {this.state.isLoadingUsers ?
+                        <Loading />
+                        :
+                        this.state.users ?
+                            <div>
+                                <Forms
+                                    newUserName={this.state.newUserName}
+                                    newUserChangeHandler={this.newUserChangeHandler}
+                                    onAddNewUserClick={this.onAddNewUserClick}
+                                />
+                                <List
+                                    users={this.state.users}
+                                    onEditUserHandler={this.onEditUserHandler}
+                                />
+                            </div>
+                            :
+                            <Default
+                                clickHandler={this.loadUsers}
+                                label={'Click'}
+                            />
+                    }
+
+                </div>
+            )
+        }
+
+    }
+
+    export default UserList
