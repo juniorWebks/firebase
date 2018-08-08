@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
 
 const Default = (props) => (
@@ -12,4 +12,9 @@ onClick={props.clickHandler}
     </div>
 
 )
+
+Default.propTypes = {
+    clickHandler:PropTypes.func.isRequired,
+    label: PropTypes.string.isRequired
+  }
 export default Default
