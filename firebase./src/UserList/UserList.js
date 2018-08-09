@@ -7,6 +7,8 @@ import Forms from './Forms'
 
 import { mapObjectToArray } from '../utils'
 
+import database from '../firebaseConfig'
+
 
 class UserList extends React.Component {
     state = {
@@ -16,19 +18,25 @@ class UserList extends React.Component {
 
     }
 
-    loadUsers = () => {
+    initUsersSync = () => {
         this.setState({
             isLoadingUsers: true
         })
 
-        fetch('https://ks-sandbox-2cc5e.firebaseio.com/jfddl5-users/.json')
-            .then(response => response.json())
-            .then(data => this.setState({
-                users: mapObjectToArray(data),
-                isLoadingUsers: false
-            })
-            )
+
+        // fetch('https://ks-sandbox-2cc5e.firebaseio.com/jfddl5-users/.json')
+        database.ref('/jfddl5-users').on(
+            'value',
+            snapshot => {
+                const data = snapshot.val()
+                this.setState({
+                    users: mapObjectToArray(data),
+                    isLoadingUsers: false
+                })
+            }
+        )
     }
+
 
     newUserChangeHandler = (event) => {
         this.setState({
@@ -45,7 +53,7 @@ class UserList extends React.Component {
 
         fetch('https://ks-sandbox-2cc5e.firebaseio.com/jfddl5-users/.json', request)
             .then(response => {
-                this.loadUsers()
+                this.initUsersSync()
                 this.setState({
                     newUserName: ''
                 })
@@ -53,52 +61,52 @@ class UserList extends React.Component {
     }
 
     onEditUserHandler = (key, newName) => {
-        this.setState({
-            isLoading:true
+         database.ref(`/jfddl5-users/${key}`).update({
+            name: newName
         })
-        fetch(`https://ks-sandbox-2cc5e.firebaseio.com/jfddl5-users/${key}/.json`,
-            {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    name: newName
-                })
-            }
-        )
-        .then(()=>{
-            this.loadUsers()
-        })
+        //     fetch(`https://ks-sandbox-2cc5e.firebaseio.com/jfddl5-users/${key}/.json`,
+        //         {
+        //             method: 'PATCH',
+        //             body: JSON.stringify({
+        //                 name: newName
+        //             })
+        //         }
+        //     )
+        //     .then(()=>{
+        //         this.initUsersSync()
+        //     })
     }
 
-        render() {
-            return (
-                <div>
+    render() {
+        return (
+            <div>
 
-                    {this.state.isLoadingUsers ?
-                        <Loading />
-                        :
-                        this.state.users ?
-                            <div>
-                                <Forms
-                                    newUserName={this.state.newUserName}
-                                    newUserChangeHandler={this.newUserChangeHandler}
-                                    onAddNewUserClick={this.onAddNewUserClick}
-                                />
-                                <List
-                                    users={this.state.users}
-                                    onEditUserHandler={this.onEditUserHandler}
-                                />
-                            </div>
-                            :
-                            <Default
-                                clickHandler={this.loadUsers}
-                                label={'Click'}
+                {this.state.isLoadingUsers ?
+                    <Loading />
+                    :
+                    this.state.users ?
+                        <div>
+                            <Forms
+                                newUserName={this.state.newUserName}
+                                newUserChangeHandler={this.newUserChangeHandler}
+                                onAddNewUserClick={this.onAddNewUserClick}
                             />
-                    }
+                            <List
+                                users={this.state.users}
+                                onEditUserHandler={this.onEditUserHandler}
+                            />
+                        </div>
+                        :
+                        <Default
+                            clickHandler={this.initUsersSync}
+                            label={'Click'}
+                        />
+                }
 
-                </div>
-            )
-        }
-
+            </div>
+        )
     }
 
-    export default UserList
+}
+
+export default UserList
