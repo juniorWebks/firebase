@@ -86,6 +86,10 @@ class UserList extends React.Component {
     }
 
     render() {
+        const filteredUsers = this.state.users &&
+        this.state.users.filter(
+            user => user.name.indexOf(this.state.searchPhrase) !== -1
+        )
         return (
             <div>
 
@@ -106,21 +110,24 @@ class UserList extends React.Component {
                                 onSearchPhraseChanged={this.onSearchPhraseChanged}
                             />
                             <List
-                                users={this.state.users}
-                                onEditUserHandler={this.onEditUserHandler}
-                            />
+                                users={filteredUsers
+                                    
+                                    }
+                                onEditUserHandler = {this.onEditUserHandler}
+                                
+                                        />
                         </div>
-                        :
+                            :
                         <Default
-                            clickHandler={this.initUsersSync}
-                            label={'Click'}
-                        />
-                }
-
+                                clickHandler={this.initUsersSync}
+                                label={'Click'}
+                            />
+                            }
+            
             </div>
         )
-    }
-
-}
-
+                }
+            
+            }
+            
 export default UserList
