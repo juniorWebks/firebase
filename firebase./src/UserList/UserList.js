@@ -7,7 +7,7 @@ import Forms from './Forms'
 
 import { mapObjectToArray } from '../utils'
 
-import database from '../firebaseConfig'
+import {database} from '../firebaseConfig'
 import Search from './Search'
 
 
