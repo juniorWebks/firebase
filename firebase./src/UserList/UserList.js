@@ -8,13 +8,15 @@ import Forms from './Forms'
 import { mapObjectToArray } from '../utils'
 
 import database from '../firebaseConfig'
+import Search from './Search'
 
 
 class UserList extends React.Component {
     state = {
         newUserName: '',
         users: null,
-        isLoadingUsers: false
+        isLoadingUsers: false,
+        searchPhrase: ''
 
     }
 
@@ -61,7 +63,7 @@ class UserList extends React.Component {
     }
 
     onEditUserHandler = (key, newName) => {
-         database.ref(`/jfddl5-users/${key}`).update({
+        database.ref(`/jfddl5-users/${key}`).update({
             name: newName
         })
         //     fetch(`https://ks-sandbox-2cc5e.firebaseio.com/jfddl5-users/${key}/.json`,
@@ -77,6 +79,12 @@ class UserList extends React.Component {
         //     })
     }
 
+    onSearchPhraseChanged = event => {
+        this.setState({
+            searchPhrase: event.target.value
+        })
+    }
+
     render() {
         return (
             <div>
@@ -90,6 +98,12 @@ class UserList extends React.Component {
                                 newUserName={this.state.newUserName}
                                 newUserChangeHandler={this.newUserChangeHandler}
                                 onAddNewUserClick={this.onAddNewUserClick}
+                            />
+
+
+                            <Search
+                                serchPhrase={this.state.searchPhrase}
+                                onSearchPhraseChanged={this.onSearchPhraseChanged}
                             />
                             <List
                                 users={this.state.users}
