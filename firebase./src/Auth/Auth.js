@@ -1,44 +1,48 @@
 import React from 'react'
 import LogInForms from './LogInForms'
-
 import { auth, googleProvider } from '../firebaseConfig'
 
-
-
 class Auth extends React.Component {
-
     state = {
         isLoggedIn: false,
-        loginInEmail:'',
-        loginInPassword:''
+        logInEmail: '',
+        logInPasword: ''
     }
-    //logowanie  wykrywamy czy ktos jest zalogowany
+
     componentDidMount() {
         auth.onAuthStateChanged(user => {
             if (user) {
-                console.log('Logged in')
+
+                this.setState({
+                    isLoggedIn: true
+                })
             } else {
-                console.log('Not Logged in')
+                this.setState({
+                    isLoggedIn: false
+                })
             }
         })
-
     }
 
-
-
-
-    //logowanie poprzez google
     onLogInByGoogleClickHandler = () => {
         auth.signInWithPopup(googleProvider)
-            .catch((error => {
+            .catch((error) => {
                 console.log(error)
-                alert('błąd logowanie')
-            }))
-
+                alert('Błąd logowania!')
+            })
     }
 
-    onEmailChangeHandler = event => this.setState({logInEmail:event.target.value}) 
-    onPasswordChangeHandler = event =>this.setState({logInPassword:event.target.value})
+    onEmailChangedHandler = event => this.setState({ logInEmail: event.target.value })
+    onPasswordChangedHandler = event => this.setState({ logInPasword: event.target.value })
+
+    onLogInByEmailAndPasswordClickHandler = () => {
+        auth.signInWithEmailAndPassword(this.state.logInEmail, this.state.logInPasword)
+            .catch((error) => {
+                console.log(error)
+                alert('Błąd logowania!')
+            })
+    }
+
     render() {
         return (
             <div>
@@ -46,20 +50,21 @@ class Auth extends React.Component {
                     this.state.isLoggedIn ?
                         this.props.children
                         :
-
                         <LogInForms
                             onLogInByGoogleClickHandler={this.onLogInByGoogleClickHandler}
-                            emailValue={this.state.logInEmail}
-                            passwordValue={this.state.logInPassword}
-                            onEmailChangeHandler={this.onEmailChangeHandler}
-                            onPasswordChangeHandler={this.onPasswordChangeHandler}
-                            onLogInByEmailAndPasswordClickHandler={this.onLogInByEmailAndPasswordClickHandler}
+                            logInProps={{
+                                emailValue: this.state.logInEmail ,
+              passwordValue: this.state.logInPasword ,
+              onEmailChangedHandler: this.onEmailChangedHandler ,
+              onPasswordChangedHandler: this.onPasswordChangedHandler ,
+              onLogInByEmailAndPasswordClickHandler: this.onLogInByEmailAndPasswordClickHandler
+                            }}
+                            signUpProps={{
+
+                            }}
                         />
                 }
-
             </div>
-
-
         )
     }
 }
