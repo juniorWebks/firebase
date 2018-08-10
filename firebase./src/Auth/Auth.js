@@ -6,7 +6,10 @@ class Auth extends React.Component {
     state = {
         isLoggedIn: false,
         logInEmail: '',
-        logInPasword: ''
+        logInPasword: '',
+        signUpEmail: '',
+        signUpPasword: ''
+
     }
 
     componentDidMount() {
@@ -32,15 +35,34 @@ class Auth extends React.Component {
             })
     }
 
-    onEmailChangedHandler = event => this.setState({ logInEmail: event.target.value })
-    onPasswordChangedHandler = event => this.setState({ logInPasword: event.target.value })
 
-    onLogInByEmailAndPasswordClickHandler = () => {
-        auth.signInWithEmailAndPassword(this.state.logInEmail, this.state.logInPasword)
-            .catch((error) => {
-                console.log(error)
-                alert('Błąd logowania!')
-            })
+
+    logInFunctions = {
+        onEmailChangedHandler: event => this.setState({ logInEmail: event.target.value }),
+        onPasswordChangedHandler: event => this.setState({ logInPasword: event.target.value }),//onEmailChangedHandler : event => this.setState({ logInEmail: event.target.value }),
+        //onPasswordChangedHandler : event => this.setState({ logInPasword: event.target.value }),
+
+        onLogInByEmailAndPasswordClickHandler: () => {
+            auth.signInWithEmailAndPassword(this.state.logInEmail, this.state.logInPasword)
+                .catch((error) => {
+                    console.log(error)
+                    alert('Błąd logowania!')
+                })
+        }
+
+    }
+
+    signUpFunctions = {
+        onEmailChangedHandler: event => this.setState({ signUpEmail: event.target.value }),
+        onPasswordChangedHandler: event => this.setState({ signUpPasword: event.target.value }),
+        onSignUpByEmailAndPasswordClickHandler: () => {
+            auth.createUserWithEmailAndPassword(this.state.signUpEmail, this.state.signUpPasword)
+                .catch((error) => {
+                    console.log(error)
+                    alert('Błąd rejestracji')
+                })
+        }
+
     }
 
     render() {
@@ -48,19 +70,34 @@ class Auth extends React.Component {
             <div>
                 {
                     this.state.isLoggedIn ?
-                        this.props.children
+                        <div>
+                            <div>
+                                <button
+                                    onClick={() => auth.signOut()}
+                                >
+                                    Log out!
+                            </button>
+                            </div>
+                            {this.props.children}
+                        </div>
                         :
                         <LogInForms
                             onLogInByGoogleClickHandler={this.onLogInByGoogleClickHandler}
                             logInProps={{
-                                emailValue: this.state.logInEmail ,
-              passwordValue: this.state.logInPasword ,
-              onEmailChangedHandler: this.onEmailChangedHandler ,
-              onPasswordChangedHandler: this.onPasswordChangedHandler ,
-              onLogInByEmailAndPasswordClickHandler: this.onLogInByEmailAndPasswordClickHandler
+                                emailValue: this.state.logInEmail,
+                                passwordValue: this.state.logInPasword,
+                                onEmailChangedHandler: this.logInFunctions.onEmailChangedHandler,
+                                onPasswordChangedHandler: this.logInFunctions.onPasswordChangedHandler,
+                                onLogInByEmailAndPasswordClickHandler: this.logInFunctions.onLogInByEmailAndPasswordClickHandler
                             }}
                             signUpProps={{
+                                emailValue: this.state.signUpEmail,
+                                passwordValue: this.state.signUpPasword,
 
+                                onEmailChangedHandler: this.signUpFunctions.onEmailChangedHandler,
+                                onPasswordChangedHandler: this.signUpFunctions.onPasswordChangedHandler,
+
+                                onSingUpClickHandler: this.signUpFunctions.onSingUpByEmailAndPasswordClickHandler
                             }}
                         />
                 }

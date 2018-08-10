@@ -16,11 +16,11 @@ const LogInForms = (props) => (
       onLogInClickHandler={props.logInProps.onLogInByEmailAndPasswordClickHandler}
     />
     <CreateUserWithEmailAndPassword
-      emailValue={props.emailValue}
-      passwordValue={props.passwordValue}
-      onEmailChangedHandler={props.onEmailChangedHandler}
-      onPasswordChangedHandler={props.onPasswordChangedHandler}
-      onLogInClickHandler={props.onLogInByEmailAndPasswordClickHandler}
+      emailValue={props.signUpProps.emailValue}
+      passwordValue={props.signUpProps.passwordValue}
+      onEmailChangedHandler={props.signUpProps.onEmailChangedHandler}
+      onPasswordChangedHandler={props.signUpProps.onPasswordChangedHandler}
+      onLogInClickHandler={props.signUpProps.onLogInByEmailAndPasswordClickHandler}
       />
   </div>
 )
